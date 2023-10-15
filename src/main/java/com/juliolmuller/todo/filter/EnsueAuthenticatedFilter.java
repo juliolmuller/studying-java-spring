@@ -1,21 +1,18 @@
 package com.juliolmuller.todo.filter;
 
-import java.io.IOException;
-import java.util.Base64;
-
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.ServletException;
-
+import java.io.IOException;
+import java.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.juliolmuller.todo.repository.IUserRepository;
-
-import at.favre.lib.crypto.bcrypt.BCrypt;
 
 @Component
 public class EnsueAuthenticatedFilter extends OncePerRequestFilter {
@@ -62,6 +59,7 @@ public class EnsueAuthenticatedFilter extends OncePerRequestFilter {
             return;
         }
 
+        request.setAttribute("userId", user.getId());
         chain.doFilter(request, response);
     }
 }

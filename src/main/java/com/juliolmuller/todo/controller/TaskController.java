@@ -1,5 +1,8 @@
 package com.juliolmuller.todo.controller;
 
+import java.util.UUID;
+
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +22,19 @@ public class TaskController {
     private ITaskRepository taskRepository;
 
     @GetMapping
-    public ResponseEntity index() {
-        var tasks = this.taskRepository.findAll();
+    public ResponseEntity index(HttpServletRequest request) {
+        var userId = (UUID) request.getAttribute("userId");
+        var tasks = this.taskRepository.findAllByUserId(userId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(tasks);
     }
 
     @PostMapping
-    public ResponseEntity create(@RequestBody Task task) {
+    public ResponseEntity create(HttpServletRequest request, @RequestBody Task task) {
+        var userId = (UUID) request.getAttribute("userId");
+
+        task.setUserId(userId);
+
         var taskCreated = this.taskRepository.save(task);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(taskCreated);

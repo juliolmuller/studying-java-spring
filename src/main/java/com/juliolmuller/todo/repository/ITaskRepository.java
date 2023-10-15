@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.juliolmuller.todo.model.Task;
 
-public interface ITaskRepository extends JpaRepository<Task, UUID> {}
+public interface ITaskRepository extends JpaRepository<Task, UUID> {
+    Task[] findAllByUserId(UUID userId);
+}
