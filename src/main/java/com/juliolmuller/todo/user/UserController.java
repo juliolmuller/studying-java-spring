@@ -1,5 +1,6 @@
 package com.juliolmuller.todo.user;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-
     @Autowired
     private IUserRepository userRepository;
 
@@ -22,6 +22,11 @@ public class UserController {
         if (existingUser != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already in use.");
         }
+
+        var charArrayPassword = user.getPassword().toCharArray();
+        var encryptedPassword = BCrypt.withDefaults().hashToString(12, charArrayPassword);
+
+        user.setPassword(encryptedPassword);
 
         var userCreated = this.userRepository.save(user);
 
