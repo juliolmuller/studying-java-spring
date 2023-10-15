@@ -1,4 +1,4 @@
-package com.juliolmuller.todo.user;
+package com.juliolmuller.todo.controller;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.juliolmuller.todo.model.User;
+import com.juliolmuller.todo.repository.IUserRepository;
 
 @RestController
 @RequestMapping("/api/users")
