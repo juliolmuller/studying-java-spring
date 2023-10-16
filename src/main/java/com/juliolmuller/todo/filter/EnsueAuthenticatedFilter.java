@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.ServletException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,15 @@ public class EnsueAuthenticatedFilter extends OncePerRequestFilter {
     @Autowired
     IUserRepository userRepository;
 
+    private boolean isRouteProtected(String httpMethod, String pathname) {
+        var route = httpMethod + " " + pathname;
+        var exceptions = Arrays.asList(
+            "POST /api/users"
+        );
+
+        return !exceptions.contains(route);
+    }
+
     @Override
     protected void doFilterInternal(
         HttpServletRequest request,
@@ -28,7 +38,7 @@ public class EnsueAuthenticatedFilter extends OncePerRequestFilter {
         var method = request.getMethod();
         var pathname = request.getServletPath();
 
-        if (method.equals("POST") && pathname.equals("/api/users")) {
+        if (!this.isRouteProtected(method, pathname)) {
             chain.doFilter(request, response);
             return;
         }
